@@ -1,0 +1,24 @@
+{
+  "name": "flash-md5",
+  "version": "1.0.0",
+  "description": "FlashMD5 is a fast MD5 tool for WebApp, especially for scenarios where you need to calculate the MD5 of large files.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iknil/flash-md5.git"
+  },
+  "keywords": [
+    "MD5",
+    "web",
+    "fast"
+  ],
+  "author": "iknil",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iknil/flash-md5/issues"
+  },
+  "homepage": "https://github.com/iknil/flash-md5#readme"
+}
