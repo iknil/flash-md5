@@ -13,7 +13,7 @@ npm install
 ./extra/emsdk/emsdk install 4.0.8
 ./extra/emsdk/emsdk activate 4.0.8
 # only for linux and macos
-source ./extra/emsdk/emsdk.sh
+source ./extra/emsdk/emsdk_env.sh
 ```
 
 2. build
