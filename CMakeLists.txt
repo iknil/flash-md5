@@ -5,15 +5,9 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_EXECUTABLE_SUFFIX .js)
 MESSAGE(STATUS "operation system is ${CMAKE_SYSTEM_NAME}")
 
-IF(${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
-    include_directories(./extra/md5-c)
-    # link_directories(./extra/md5-c)
-ELSEIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    include_directories(/opt/homebrew/Cellar/openssl@1.1/1.1.1k/include)
-ENDIF()
-
+add_library(md5libs ./src/md5.c ./src/md5.h)
 add_executable(flash-md5 ./src/main.c ./src/main.h)
-# target_link_libraries(flash-md5 libcrypto.a libssl.a)
+target_link_libraries(flash-md5 md5libs)
 
 # debug option
 # target_link_options(flash-md5 PUBLIC "SHELL: -g")
