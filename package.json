@@ -18,6 +18,7 @@
     "web",
     "fast"
   ],
+  "files": ["/lib", "README.md"],
   "author": "iknil",
   "license": "MIT",
   "bugs": {
