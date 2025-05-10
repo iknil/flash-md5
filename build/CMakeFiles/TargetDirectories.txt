@@ -1,3 +1,0 @@
-/mnt/c/Documents and Settings/lizhe/Documents/Projects/flash-md5/build/CMakeFiles/flash-md5.dir
-/mnt/c/Documents and Settings/lizhe/Documents/Projects/flash-md5/build/CMakeFiles/edit_cache.dir
-/mnt/c/Documents and Settings/lizhe/Documents/Projects/flash-md5/build/CMakeFiles/rebuild_cache.dir

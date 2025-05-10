@@ -1,6 +1,3 @@
 [submodule "extra/emsdk"]
 	path = extra/emsdk
 	url = https://github.com/emscripten-core/emsdk.git
-[submodule "extra/md5-c"]
-	path = extra/md5-c
-	url = https://github.com/Zunawe/md5-c.git
