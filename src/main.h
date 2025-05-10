@@ -6,7 +6,6 @@
 #define WEB_STREAMING_MD5_MAIN_H
 
 # define CHUCK_SIZE 1048576 * 5 // 5MB
-# define MD5_DIGEST_LENGTH 16
 
 enum STATUS
 {
@@ -14,7 +13,8 @@ enum STATUS
 };
 
 enum STATUS s_status;
-MD5Context md_context;
+unsigned char md5_result[MD5_DIGEST_LENGTH];
+MD5_CTX md_context;
 
 char *s_path;
 unsigned char data[CHUCK_SIZE];

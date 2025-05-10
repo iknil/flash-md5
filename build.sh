@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+set -e
 
 # clear
 rm -rf ./build
@@ -6,9 +7,10 @@ mkdir ./build
 
 # build wasm
 emcmake cmake ./ -B ./build
-# cp ./src/main.c ./build/main.c
 cd build
 make
+
+echo $res
 
 # copy to lib
 cd ../

@@ -1,28 +1,20 @@
-interface MD5ToolOptions {
+interface FlashMD5Options {
     entry: string;
-    worker: string;
     wasm: string;
-    chunkSize?: number;
 }
-declare class MD5Tool {
+declare class FlashMD5 {
     static BASIS_CHUNK_SIZE: number;
-    private chunkSize;
     private handler;
     private worker;
     private event;
     private readonly entryAddress;
     private readonly wasmAddress;
-    constructor(options: MD5ToolOptions);
+    constructor(options: FlashMD5Options);
     /**
      * load resources
      * @private
      */
     private initWorker;
-    /**
-     * get SharedArrayBuffer(Uint8Array) from ArrayBuffer
-     * @param data
-     * @private
-     */
     /**
      * get Uint8Array from ArrayBuffer
      * @param data
@@ -35,13 +27,13 @@ declare class MD5Tool {
      * @private
      */
     private actionDone;
-    init(): Promise<MD5Tool>;
-    start(): Promise<MD5Tool>;
-    update(chuck: ArrayBuffer): Promise<MD5Tool>;
+    init(): Promise<FlashMD5>;
+    start(): Promise<FlashMD5>;
+    update(chuck: ArrayBuffer): Promise<FlashMD5>;
     getState(): Promise<ArrayBuffer>;
-    setState(chuck: ArrayBuffer): Promise<MD5Tool>;
-    end(): Promise<MD5Tool>;
-    destroy(): Promise<MD5Tool>;
+    setState(chuck: ArrayBuffer): Promise<FlashMD5>;
+    end(): Promise<FlashMD5>;
+    destroy(): Promise<FlashMD5>;
 }
 
-export { MD5Tool as default };
+export { FlashMD5 as default };

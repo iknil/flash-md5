@@ -3,5 +3,5 @@
 
 # project
 build
-lib
+/lib
 node_modules

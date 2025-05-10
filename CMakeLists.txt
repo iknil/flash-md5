@@ -5,9 +5,14 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_EXECUTABLE_SUFFIX .js)
 MESSAGE(STATUS "operation system is ${CMAKE_SYSTEM_NAME}")
 
-add_library(md5libs ./src/md5.c ./src/md5.h)
+if(CMAKE_HOST_SYSTEM_NAME MATCHES "Linux" AND CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "x86_64")
+else()
+    message(FATAL_ERROR "${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_HOST_SYSTEM_PROCESSOR} is not support!")
+endif()
+include_directories("./extra/openssl/${CMAKE_HOST_SYSTEM_NAME}_${CMAKE_HOST_SYSTEM_PROCESSOR}/include")
+link_directories("./extra/openssl/${CMAKE_HOST_SYSTEM_NAME}_${CMAKE_HOST_SYSTEM_PROCESSOR}/lib")
 add_executable(flash-md5 ./src/main.c ./src/main.h)
-target_link_libraries(flash-md5 md5libs)
+target_link_libraries(flash-md5 libcrypto.a libssl.a)
 
 # debug option
 # target_link_options(flash-md5 PUBLIC "SHELL: -g")

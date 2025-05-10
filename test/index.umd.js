@@ -127,24 +127,14 @@
         CALLBACK_TYPE[CALLBACK_TYPE["INIT"] = 2001] = "INIT";
         CALLBACK_TYPE[CALLBACK_TYPE["OTHERS"] = 2002] = "OTHERS";
     })(CALLBACK_TYPE || (CALLBACK_TYPE = {}));
-    var MD5Tool = /** @class */ (function () {
-        function MD5Tool(options) {
+    var FlashMD5 = /** @class */ (function () {
+        function FlashMD5(options) {
             var _this = this;
-            this.chunkSize = MD5Tool.BASIS_CHUNK_SIZE;
             this.handler = null;
             this.worker = null;
             this.event = null;
             this.entryAddress = null;
             this.wasmAddress = null;
-            if (options.chunkSize) {
-                if (options.chunkSize / MD5Tool.BASIS_CHUNK_SIZE > 0 &&
-                    options.chunkSize % MD5Tool.BASIS_CHUNK_SIZE === 0) {
-                    this.chunkSize = options.chunkSize;
-                }
-                else {
-                    console.warn("The chunkSize should be a multiple of 5MB(MD5Tool.MD5Tool.BASIS_CHUNK_SIZE).");
-                }
-            }
             this.entryAddress = options.entry;
             this.wasmAddress = options.wasm;
             this.event = new EventEmitter();
@@ -219,7 +209,7 @@
          * load resources
          * @private
          */
-        MD5Tool.prototype.initWorker = function () {
+        FlashMD5.prototype.initWorker = function () {
             return __awaiter(this, void 0, Promise, function () {
                 var _this = this;
                 return __generator(this, function (_a) {
@@ -262,24 +252,11 @@
             });
         };
         /**
-         * get SharedArrayBuffer(Uint8Array) from ArrayBuffer
-         * @param data
-         * @private
-         */
-        // private getU8ASABFromAB(data: ArrayBuffer): Uint8Array {
-        //     let u8a = new Uint8Array(data)
-        //     let sab = new SharedArrayBuffer(u8a.byteLength);
-        //     // let t_u8a = new Uint8Array(sab);
-        //     // t_u8a = u8a;
-        //     // return t_u8a;
-        //     return u8a;
-        // }
-        /**
          * get Uint8Array from ArrayBuffer
          * @param data
          * @returns
          */
-        MD5Tool.prototype.getU8ABFromAB = function (data) {
+        FlashMD5.prototype.getU8ABFromAB = function (data) {
             return new Uint8Array(data);
         };
         /**
@@ -287,7 +264,7 @@
          * @param callbackType
          * @private
          */
-        MD5Tool.prototype.actionDone = function (callbackType) {
+        FlashMD5.prototype.actionDone = function (callbackType) {
             return __awaiter(this, void 0, Promise, function () {
                 var _this = this;
                 return __generator(this, function (_a) {
@@ -300,7 +277,7 @@
                 });
             });
         };
-        MD5Tool.prototype.init = function () {
+        FlashMD5.prototype.init = function () {
             return __awaiter(this, void 0, Promise, function () {
                 var _a;
                 return __generator(this, function (_b) {
@@ -317,7 +294,7 @@
                 });
             });
         };
-        MD5Tool.prototype.start = function () {
+        FlashMD5.prototype.start = function () {
             return __awaiter(this, void 0, Promise, function () {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -333,7 +310,7 @@
                 });
             });
         };
-        MD5Tool.prototype.update = function (chuck) {
+        FlashMD5.prototype.update = function (chuck) {
             return __awaiter(this, void 0, Promise, function () {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -349,7 +326,7 @@
                 });
             });
         };
-        MD5Tool.prototype.getState = function () {
+        FlashMD5.prototype.getState = function () {
             return __awaiter(this, void 0, Promise, function () {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -363,7 +340,7 @@
                 });
             });
         };
-        MD5Tool.prototype.setState = function (chuck) {
+        FlashMD5.prototype.setState = function (chuck) {
             return __awaiter(this, void 0, Promise, function () {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -379,7 +356,7 @@
                 });
             });
         };
-        MD5Tool.prototype.end = function () {
+        FlashMD5.prototype.end = function () {
             return __awaiter(this, void 0, Promise, function () {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -393,7 +370,7 @@
                 });
             });
         };
-        MD5Tool.prototype.destroy = function () {
+        FlashMD5.prototype.destroy = function () {
             return __awaiter(this, void 0, Promise, function () {
                 return __generator(this, function (_a) {
                     this.handler = null;
@@ -405,10 +382,10 @@
                 });
             });
         };
-        MD5Tool.BASIS_CHUNK_SIZE = 1024 * 1024 * 5; // default 5MB
-        return MD5Tool;
+        FlashMD5.BASIS_CHUNK_SIZE = 1024 * 1024 * 5; // default 5MB
+        return FlashMD5;
     }());
 
-    return MD5Tool;
+    return FlashMD5;
 
 }));

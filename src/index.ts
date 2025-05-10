@@ -1,10 +1,8 @@
 import EventEmitter from "./event";
 
-interface MD5ToolOptions {
+interface FlashMD5Options {
     entry: string
-    worker: string
     wasm: string
-    chunkSize?: number
 }
 
 enum ACTION_TYPE {
@@ -21,10 +19,9 @@ enum CALLBACK_TYPE {
     OTHERS,
 }
 
-export default class MD5Tool {
+export default class FlashMD5 {
     public static BASIS_CHUNK_SIZE = 1024 * 1024 * 5; // default 5MB
 
-    private chunkSize: number = MD5Tool.BASIS_CHUNK_SIZE;
     private handler: any = null;
 
     private worker: Worker | null = null;
@@ -33,16 +30,7 @@ export default class MD5Tool {
     private readonly entryAddress: string | null= null;
     private readonly wasmAddress: string | null = null;
 
-    constructor(options: MD5ToolOptions) {
-        if (options.chunkSize) {
-            if (options.chunkSize / MD5Tool.BASIS_CHUNK_SIZE > 0 &&
-                options.chunkSize % MD5Tool.BASIS_CHUNK_SIZE === 0) {
-                this.chunkSize = options.chunkSize;
-            } else {
-                console.warn("The chunkSize should be a multiple of 5MB(MD5Tool.MD5Tool.BASIS_CHUNK_SIZE).");
-            }
-        }
-
+    constructor(options: FlashMD5Options) {
         this.entryAddress = options.entry;
         this.wasmAddress = options.wasm;
 
@@ -99,21 +87,6 @@ export default class MD5Tool {
             return worker;
         });
     }
-
-    /**
-     * get SharedArrayBuffer(Uint8Array) from ArrayBuffer
-     * @param data
-     * @private
-     */
-    // private getU8ASABFromAB(data: ArrayBuffer): Uint8Array {
-    //     let u8a = new Uint8Array(data)
-    //     let sab = new SharedArrayBuffer(u8a.byteLength);
-    //     // let t_u8a = new Uint8Array(sab);
-    //     // t_u8a = u8a;
-
-    //     // return t_u8a;
-    //     return u8a;
-    // }
     
     /**
      * get Uint8Array from ArrayBuffer
@@ -137,14 +110,14 @@ export default class MD5Tool {
         })
     }
 
-    public async init(): Promise<MD5Tool> {
+    public async init(): Promise<FlashMD5> {
         if (this.worker === null) {
             this.worker = await this.initWorker();
         }
         return this;
     }
 
-    public async start(): Promise<MD5Tool> {
+    public async start(): Promise<FlashMD5> {
         if (!this.handler) {
             throw('please init first');
         }
@@ -153,7 +126,7 @@ export default class MD5Tool {
         return this;
     }
 
-    public async update(chuck: ArrayBuffer): Promise<MD5Tool> {
+    public async update(chuck: ArrayBuffer): Promise<FlashMD5> {
         if (!this.handler) {
             throw('please init first');
         }
@@ -172,7 +145,7 @@ export default class MD5Tool {
 
     }
 
-    public async setState(chuck: ArrayBuffer): Promise<MD5Tool> {
+    public async setState(chuck: ArrayBuffer): Promise<FlashMD5> {
         if (!this.handler) {
             throw('please init first');
         }
@@ -182,7 +155,7 @@ export default class MD5Tool {
         return this;
     }
 
-    public async end(): Promise<MD5Tool> {
+    public async end(): Promise<FlashMD5> {
         if (!this.handler) {
             throw('please init first');
         }
@@ -190,7 +163,7 @@ export default class MD5Tool {
         return await this.handler.end();
     }
 
-    public async destroy(): Promise<MD5Tool> {
+    public async destroy(): Promise<FlashMD5> {
         this.handler = null;
         if (this.worker) {
             this.worker.terminate();
