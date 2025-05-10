@@ -11,9 +11,9 @@ enum ACTION_TYPE {
     INIT = 1001,
     START,
     UPDATE,
-    end,
-    STATE,
-    RESTORE,
+    GETSTATE,
+    SETSTATE,
+    END = 1010,
 }
 
 enum CALLBACK_TYPE {
@@ -50,26 +50,26 @@ export default class MD5Tool {
 
         this.handler = {
             start: async () => {
-                this.worker?.postMessage([1002]);
+                this.worker?.postMessage([ACTION_TYPE.START]);
                 await this.actionDone(CALLBACK_TYPE.OTHERS);
             },
             update: async (chuck: ArrayBuffer) => {
-                this.worker?.postMessage([1003, this.getU8ABFromAB(chuck)]);
+                this.worker?.postMessage([ACTION_TYPE.UPDATE, this.getU8ABFromAB(chuck)]);
                 await this.actionDone(CALLBACK_TYPE.OTHERS);
             },
-            end: async () => {
-                this.worker?.postMessage([1004]);
-                return await this.actionDone(CALLBACK_TYPE.OTHERS);
-            },
-            state: async () => {
-                this.worker?.postMessage([1005]);
+            getState: async () => {
+                this.worker?.postMessage([ACTION_TYPE.GETSTATE]);
                 const result = await this.actionDone(CALLBACK_TYPE.OTHERS);
                 return result;
             },
-            restore: async (state: string) => {
-                this.worker?.postMessage([1006, state]);
+            setState: async (state: string) => {
+                this.worker?.postMessage([ACTION_TYPE.SETSTATE, state]);
                 await this.actionDone(CALLBACK_TYPE.OTHERS);
-            }
+            },
+            end: async () => {
+                this.worker?.postMessage([ACTION_TYPE.END]);
+                return await this.actionDone(CALLBACK_TYPE.OTHERS);
+            },
         }
     }
 
@@ -163,21 +163,21 @@ export default class MD5Tool {
         return this;
     }
 
-    public async state(): Promise<ArrayBuffer> {
+    public async getState(): Promise<ArrayBuffer> {
         if (!this.handler) {
             throw('please init first');
         }
 
-        return await this.handler.state();
+        return await this.handler.getState();
 
     }
 
-    public async restore(chuck: ArrayBuffer): Promise<MD5Tool> {
+    public async setState(chuck: ArrayBuffer): Promise<MD5Tool> {
         if (!this.handler) {
             throw('please init first');
         }
 
-        await this.handler.restore(chuck);
+        await this.handler.setState(chuck);
 
         return this;
     }

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo</title>
+</head>
+<body>
+    <div>
+        <h1>file md5</h1>
+        <div><input id="fileInput" type="file" /><button id="calBtn">Calculate</button></div><br />
+        <div><b>MD5:</b> <p id="resultTxt"></p></div>
+        <div><b>cost time:</b> <p id="timeTxt"></p></div>
+    </div>
+    <script type="module">
+        import FlashMD5 from "./index.js";
+        (async () => {
+            let isCaling = false;
+            const flashMD5 = new FlashMD5({
+                entry: "./build/flash-md5.js",
+                wasm: "./build/flash-md5.wasm"
+            });
+
+            await flashMD5.init();
+
+            const fileInput = document.getElementById("fileInput");
+            const calBtn = document.getElementById("calBtn");
+            const resultTxt = document.getElementById("resultTxt");
+            const timeTxt = document.getElementById("timeTxt");
+
+            calBtn.onclick = async function () {
+                const file = fileInput.files[0];
+                if (file && !isCaling) {
+                    const startTime = performance.now();
+                    await flashMD5.start();
+                    isCaling = true;
+
+                    const chunkSize = FlashMD5.BASIS_CHUNK_SIZE * 100;
+                    let index = 0;
+
+                    for (let start = 0;start < file.size; start += chunkSize) {
+                        const chunk = file.slice(start, start + chunkSize);
+                        const buffer = await chunk.arrayBuffer();
+                        await flashMD5.update(buffer);
+
+                        index = start / chunkSize;
+                    }
+
+                    const result = await flashMD5.end();
+                    const endTime = performance.now();
+                    resultTxt.innerText = `${result}`;
+                    timeTxt.innerHTML = `${(endTime - startTime).toFixed(2)}ms`;
+                    isCaling=false;
+                }
+            }
+        })()
+    </script>
+</body>
+</html>

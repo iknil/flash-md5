@@ -18,7 +18,6 @@ onmessage = function(e) {
             Module["wasmBinary"] = data;
             // init wasm
             _init();
-            
             break;
         case 1002:
             namespace = `${(new Date()).getTime()}`;
@@ -33,15 +32,13 @@ onmessage = function(e) {
             Module.FS.unlink(path);
             break;
         case 1004:
-            Module['end']();
+            Module['getState']();
             break;
         case 1005:
-            // get state
-            Module['state']();
+            Module['setState'](data);
             break;
-        case 1006:
-            // restore state
-            Module['restore'](data);
+        case 1010:
+            Module['end']();
             break;
     }
 }

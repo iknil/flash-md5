@@ -4,9 +4,9 @@
   "description": "FlashMD5 is a fast MD5 tool for WebApp, especially for scenarios where you need to calculate the MD5 of large files.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "serve test",
     "build": "rollup -c",
-    "commit": "commitizen",
+    "commit": "cz",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "repository": {
@@ -35,6 +35,7 @@
     "rollup": "^2.47.0",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-dts": "^4.2.3",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-typescript": "^1.0.1",
     "serve": "^14.2.4",

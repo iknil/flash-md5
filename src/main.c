@@ -3,6 +3,7 @@
 #include <string.h>
 #include <pthread.h>
 #include <emscripten/emscripten.h>
+#include <emscripten/console.h>
 #include <emscripten/html5.h>
 
 #include "md5.h"
@@ -61,33 +62,34 @@ void worker() {
         //     MAIN_THREAD_EM_ASM(Module["callback"] && Module["callback"]());
         //     break;
         // }
-        // case UPDATING:
-        //     if (s_path != NULL) {
-        //         FILE *inFile = fopen (s_path, "rb");
-        //         int bytes;
+        case UPDATING:
+            if (s_path != NULL) {
+                FILE *inFile = fopen(s_path, "rb");
+                int bytes;
 
-        //         while ((bytes = fread (data, 1, CHUCK_SIZE, inFile)) != 0) {
-        //             md5Update(&md_context, data, bytes);
-        //         }
-        //         fclose(inFile);
-        //         s_path = NULL;
-        //     }
+                while ((bytes = fread(data, 1, CHUCK_SIZE, inFile)) != 0) {
+                    md5Update(&md_context, data, bytes);
+                }
+                fclose(inFile);
+                s_path = NULL;
+            }
             
-        //     s_status = UPDATED;
+            s_status = UPDATED;
 
-        //     MAIN_THREAD_EM_ASM(Module["callback"] && Module["callback"]());
-        //     break;
+            MAIN_THREAD_EM_ASM(Module["callback"] && Module["callback"]());
+            break;
         case ENDING:
             md5Finalize(&md_context);
             char tmp[3]={},buf[33]={};
 
             for(int i = 0; i < MD5_DIGEST_LENGTH; i++) {
-                sprintf(tmp, "%2.2x", md5_result[i]);
+                sprintf(tmp, "%02x", md_context.digest[i]);
                 strcat(buf, tmp);
             }
 
             s_path = NULL;
             s_status = INIT;
+
             MAIN_THREAD_EM_ASM(Module["callback"] && Module["callback"](UTF8ToString($0)), buf);
             break;
         default:
@@ -110,14 +112,14 @@ void EMSCRIPTEN_KEEPALIVE update(char* path) {
 }
 
 void EMSCRIPTEN_KEEPALIVE state() {
-    s_status = STATING;
+    s_status = GETSTATING;
 
     worker();
 }
 
 void EMSCRIPTEN_KEEPALIVE restore(char* str) {
     restore_buffer = str;
-    s_status = RESTORING;
+    s_status = SETSTATING;
 
     worker();
 }
