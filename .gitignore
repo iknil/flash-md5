@@ -1,0 +1,7 @@
+# idea
+.vscode
+
+# project
+build
+/lib
+node_modules

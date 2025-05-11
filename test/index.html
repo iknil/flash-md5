@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo</title>
+</head>
+<body>
+    <div>
+        <h1>file md5</h1>
+        <div><input id="fileInput" type="file" /><button id="flashBtn">By FlashMD5</button><button id="sparkBtn">By sparkMD5</button></div><br />
+        <h2>flash md5</h2>
+        <div><b>MD5:</b> <p id="resultTxt"></p></div>
+        <div><b>cost time:</b> <p id="timeTxt"></p></div>
+        <h2>spark md5</h2>
+        <div><b>MD5:</b> <p id="resultTxt2"></p></div>
+        <div><b>cost time:</b> <p id="timeTxt2"></p></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/spark-md5/3.0.2/spark-md5.min.js" integrity="sha512-iWbxiCA4l1WTD0rRctt/BfDEmDC5PiVqFc6c1Rhj/GKjuj6tqrjrikTw3Sypm/eEgMa7jSOS9ydmDlOtxJKlSQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="module">
+        import FlashMD5 from "./index.js";
+        (async () => {
+            let isCaling = false;
+            const flashMD5 = new FlashMD5({
+                entry: "./build/flash-md5.js",
+                wasm: "./build/flash-md5.wasm"
+            });
+            await flashMD5.init();
+
+            const sparkMD5 = new SparkMD5.ArrayBuffer();
+            const chunkSize = FlashMD5.BASIS_CHUNK_SIZE * 100;
+            let chunkBufferArray = [];
+
+            const fileInput = document.getElementById("fileInput");
+            const flashBtn = document.getElementById("flashBtn");
+            const sparkBtn = document.getElementById("sparkBtn");
+            const resultTxt = document.getElementById("resultTxt");
+            const timeTxt = document.getElementById("timeTxt");
+            const resultTxt2 = document.getElementById("resultTxt2");
+            const timeTxt2 = document.getElementById("timeTxt2");
+
+            function getFileBlocks(file) {
+                const chunkBufferArray = [];
+
+                for (let start = 0; start < file.size; start += chunkSize) {
+                    const chunk = file.slice(start, start + chunkSize);
+                    chunkBufferArray.push(chunk.arrayBuffer());
+                }
+                return chunkBufferArray;
+            }
+
+            fileInput.onchange = function () {
+                chunkBufferArray = getFileBlocks(this.files[0]);
+            }
+
+            flashBtn.onclick = async function () {
+                const file = fileInput.files[0];
+                resultTxt.innerText = "";
+                timeTxt.innerHTML = "";
+
+                if (file && !isCaling) {
+                    if (chunkBufferArray.length === 0) {
+                        chunkBufferArray = getFileBlocks(file);
+                    }
+
+                    const startTime = performance.now();
+                    await flashMD5.start();
+                    isCaling = true;
+                    this.disabled = true;
+
+                    while(chunkBufferArray.length > 0) {
+                        const buffer = await chunkBufferArray.shift();
+                        await flashMD5.update(buffer);
+                    }
+
+                    const result = await flashMD5.end();
+                    const endTime = performance.now();
+                    resultTxt.innerText = `${result}`;
+                    timeTxt.innerHTML = `${(endTime - startTime).toFixed(2)}ms`;
+                    isCaling=false;
+                    this.disabled = false;
+                    chunkBufferArray = [];
+                }
+            }
+
+            sparkBtn.onclick = async function () {
+                const file = fileInput.files[0];
+                resultTxt2.innerText = "";
+                timeTxt2.innerHTML = "";
+
+                if (file && !isCaling) {
+                    if (chunkBufferArray.length === 0) {
+                        chunkBufferArray = getFileBlocks(file);
+                    }
+
+                    const startTime = performance.now();
+                    isCaling = true;
+                    this.disabled = true;
+
+                    while(chunkBufferArray.length > 0) {
+                        const buffer = await chunkBufferArray.shift();
+                        sparkMD5.append(buffer);
+                    }
+
+                    const result = sparkMD5.end();
+                    const endTime = performance.now();
+                    resultTxt2.innerText = `${result}`;
+                    timeTxt2.innerHTML = `${(endTime - startTime).toFixed(2)}ms`;
+                    isCaling=false;
+                    this.disabled = false;
+                    chunkBufferArray = [];
+                }
+            }
+        })()
+    </script>
+</body>
+</html>
