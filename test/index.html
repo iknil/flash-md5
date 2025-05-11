@@ -42,7 +42,7 @@
             function getFileBlocks(file) {
                 const chunkBufferArray = [];
 
-                for (let start = 0;start < file.size; start += chunkSize) {
+                for (let start = 0; start < file.size; start += chunkSize) {
                     const chunk = file.slice(start, start + chunkSize);
                     chunkBufferArray.push(chunk.arrayBuffer());
                 }
