@@ -11,7 +11,7 @@ FlashMD5 is a high-performance MD5 computing tool running on the web side, with 
 ## Start quickly
 
 ```js
-import FlashMD5 from "FlashMD5";
+import FlashMD5 from "flash-md5";
 
 (async () => {
     const flashMD5 = new FlashMD5({

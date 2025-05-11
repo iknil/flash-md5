@@ -11,7 +11,7 @@ FlashMD5是运行在Web端的高性能MD5计算工具，速度接近命令行工
 ## 快速开始
 
 ```js
-import FlashMD5 from "FlashMD5";
+import FlashMD5 from "flash-md5";
 
 (async () => {
     const flashMD5 = new FlashMD5({
