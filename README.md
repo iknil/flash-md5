@@ -1,6 +1,6 @@
 <p align="center">
 <a href="./README.md"><img alt="README in English" src="https://img.shields.io/badge/English-d9d9d9"></a>
-<a href="./README_CN.md"><img alt="Simplified Chinese version of Readme File" src="https://img.shields.io/badge/Simplified Chinese-d9d9d9"></a>
+<a href="./README_CN.md"><img alt="简体中文版自述文件" src="https://img.shields.io/badge/简体中文-d9d9d9"></a>
 </p>
 
 FlashMD5 is a high-performance MD5 computing tool running on the web side, with a speed close to that of the command line tool, and is especially suitable for scenarios where large files MD5 are calculated on the web side. Here are some core implementations:
