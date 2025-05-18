@@ -15,29 +15,34 @@ import FlashMD5 from "flash-md5";
 
 (async () => {
     const flashMD5 = new FlashMD5({
-        entry: "{CDN}/flash-md5.js",
-        wasm: "{CDN}/build/flash-md5.wasm"
+        entry: "https://cdn.jsdelivr.net/npm/flash-md5@1.0.1/lib/build/flash-md5.js",
+        wasm: "https://cdn.jsdelivr.net/npm/flash-md5@1.0.1/lib/build/flash-md5.wasm"
     });
 
     await flashMD5.init(); // 初始化
 
     // 获取文件ArrayBuffer
     xxx.onchange = function() {
-        const file = this.file[0];
+        const file = this.files[0];
         const chunkSize = FlashMD5.BASIS_CHUNK_SIZE * 20; // 控制分片大小，BASIS_CHUNK_SIZE = 5MB
 
         for (let start = 0; start < file.size; start += chunkSize) {
             const chunk = file.slice(start, start + chunkSize);
             const buffer = await chunk.arrayBuffer();
 
-            await sparkMD5.append(buffer); // 分片计算
+            await flashMD5.update(buffer); // 分片计算
         }
 
-        const result = sparkMD5.end(); // 获取MD5结果
+        const result = flashMD5.end(); // 获取MD5结果
     }
 })()
 
 ```
+
+### 在线示例
+
+Demo：[https://codesandbox.io/p/sandbox/nice-mccarthy-jx35z3](https://codesandbox.io/p/sandbox/nice-mccarthy-jx35z3)
+
 
 ## 开发
 
@@ -61,7 +66,7 @@ npm install
 
 ```shell
 # 编译
-./build
+./build.sh
 
 # 测试
 npm run test
@@ -93,10 +98,10 @@ fileInput.onchange = function () {
     bufferArray = getFileBlocks(this.files[0]);
 }
 
-sparkBtn.onclick = async function () {
+btn.onclick = async function () {
     while(chunkBufferArray.length > 0) {
         const buffer = await bufferArray.shift();
-        sparkMD5.append(buffer);
+        sparkMD5.update(buffer);
     }
 
     const result = sparkMD5.end();
