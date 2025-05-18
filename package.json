@@ -1,9 +1,8 @@
 {
   "name": "flash-md5",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "FlashMD5 is a fast MD5 tool for WebApp, especially for scenarios where you need to calculate the MD5 of large files.",
-  "main": "lib/index.umd.js",
-  "module": "lib/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "serve test",
     "build": "rollup -c",
