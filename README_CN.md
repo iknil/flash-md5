@@ -101,10 +101,10 @@ fileInput.onchange = function () {
 btn.onclick = async function () {
     while(chunkBufferArray.length > 0) {
         const buffer = await bufferArray.shift();
-        sparkMD5.update(buffer);
+        flashMD5.update(buffer);
     }
 
-    const result = sparkMD5.end();
+    const result = flashMD5.end();
 }
 
 ```
