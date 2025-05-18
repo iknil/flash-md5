@@ -15,29 +15,33 @@ import FlashMD5 from "flash-md5";
 
 (async () => {
     const flashMD5 = new FlashMD5({
-        entry: "{CDN}/flash-md5.js",
-        wasm: "{CDN}/build/flash-md5.wasm"
+        entry: "https://cdn.jsdelivr.net/npm/flash-md5@1.0.1/lib/build/flash-md5.js",
+        wasm: "https://cdn.jsdelivr.net/npm/flash-md5@1.0.1/lib/build/flash-md5.wasm"
     });
 
     await flashMD5.init(); // Initialization
 
     // Get the file ArrayBuffer
     xxx.onchange = function() {
-        const file = this.file[0];
+        const file = this.files[0];
         const chunkSize = FlashMD5.BASIS_CHUNK_SIZE * 20; // Control the shard size, BASIS_CHUNK_SIZE = 5MB
 
         for (let start = 0; start < file.size; start += chunkSize) {
             const chunk = file.slice(start, start + chunkSize);
             const buffer = await chunk.arrayBuffer();
 
-            await sparkMD5.append(buffer); // sharding calculation
+            await flashMD5.update(buffer); // sharding calculation
         }
 
-        const result = sparkMD5.end(); // Get MD5 results
+        const result = flashMD5.end(); // Get MD5 results
     }
 })()
 
 ```
+
+### Online example
+
+Demo：[https://codesandbox.io/p/sandbox/nice-mccarthy-jx35z3](https://codesandbox.io/p/sandbox/nice-mccarthy-jx35z3)
 
 ## Development
 
@@ -46,7 +50,7 @@ import FlashMD5 from "flash-md5";
 > If you need to complete development on Windows system, please execute the following commands through WSL
 
 ```shell
-Git Submodule Init
+git submodule init
 git submodule update
 
 ./extra/emsdk/emsdk install 4.0.8
@@ -60,8 +64,8 @@ npm install
 **2. Compilation test**
 
 ```shell
-# Compilation
-./build
+# compilation
+./build.sh
 
 # test
 npm run test
@@ -93,13 +97,13 @@ fileInput.onchange = function () {
     bufferArray = getFileBlocks(this.files[0]);
 }
 
-sparkBtn.onclick = async function () {
+btn.onclick = async function () {
     while(chunkBufferArray.length > 0) {
         const buffer = await bufferArray.shift();
-        sparkMD5.append(buffer);
+        flashMD5.update(buffer);
     }
 
-    const result = sparkMD5.end();
+    const result = flashMD5.end();
 }
 
 ```
